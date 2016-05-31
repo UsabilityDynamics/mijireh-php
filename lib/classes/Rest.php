@@ -202,7 +202,7 @@ namespace UsabilityDynamics\MijirehClient {
             throw new Rest_Unauthorized($this->processError($body));
             break;
           case 403:
-            throw newRest_Forbidden($this->processError($body));
+            throw new Rest_Forbidden($this->processError($body));
             break;
           case 404:
             throw new Rest_NotFound($this->processError($body));

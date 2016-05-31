@@ -2,31 +2,31 @@
 
 namespace UsabilityDynamics\MijirehClient {
 
-  class Mijireh_Exception extends \Exception
+  class Exception extends \Exception
   {
   }
 
-  class Mijireh_ClientError extends Mijireh_Exception
+  class ClientError extends Exception
   {
   }         /* Status: 400-499 */
 
-  class Mijireh_BadRequest extends Mijireh_ClientError
+  class BadRequest extends ClientError
   {
   }        /* Status: 400 */
 
-  class Mijireh_Unauthorized extends Mijireh_ClientError
+  class Unauthorized extends ClientError
   {
   }      /* Status: 401 */
 
-  class Mijireh_NotFound extends Mijireh_ClientError
+  class NotFound extends ClientError
   {
   }          /* Status: 404 */
 
-  class Mijireh_ServerError extends Mijireh_Exception
+  class ServerError extends Exception
   {
   }         /* Status: 500-599 */
 
-  class Mijireh_InternalError extends Mijireh_ServerError
+  class InternalError extends ServerError
   {
   }     /* Status: 500 */
 
@@ -60,7 +60,7 @@ namespace UsabilityDynamics\MijirehClient {
           '$/i';
 
       if (!preg_match($url_format, $url)) {
-        throw new Mijireh_NotFound('Unable to slurp invalid URL: $url');
+        throw new NotFound('Unable to slurp invalid URL: $url');
       }
 
       try {
@@ -75,15 +75,15 @@ namespace UsabilityDynamics\MijirehClient {
         $result = $rest->post('slurps', $data);
         return $result['job_id'];
       } catch (Rest_Unauthorized $e) {
-        throw new Mijireh_Unauthorized("Unauthorized. Please check your api access key");
+        throw new Unauthorized("Unauthorized. Please check your api access key");
       } catch (Rest_NotFound $e) {
-        throw new Mijireh_NotFound("Mijireh resource not found: " . $rest->last_request['url']);
+        throw new NotFound("Mijireh resource not found: " . $rest->last_request['url']);
       } catch (Rest_ClientError $e) {
-        throw new Mijireh_ClientError($e->getMessage());
+        throw new ClientError($e->getMessage());
       } catch (Rest_ServerError $e) {
-        throw new Mijireh_ServerError($e->getMessage());
+        throw new ServerError($e->getMessage());
       } catch (Rest_UnknownResponse $e) {
-        throw new Mijireh_Exception('Unable to slurp the URL: $url');
+        throw new Exception('Unable to slurp the URL: $url');
       }
     }
 
@@ -98,22 +98,22 @@ namespace UsabilityDynamics\MijirehClient {
         $result = $rest->get('store');
         return $result;
       } catch (Rest_BadRequest $e) {
-        throw new Mijireh_BadRequest($e->getMessage());
+        throw new BadRequest($e->getMessage());
       } catch (Rest_Unauthorized $e) {
-        throw new Mijireh_Unauthorized("Unauthorized. Please check your api access key");
+        throw new Unauthorized("Unauthorized. Please check your api access key");
       } catch (Rest_NotFound $e) {
-        throw new Mijireh_NotFound("Mijireh resource not found: " . $rest->last_request['url']);
+        throw new NotFound("Mijireh resource not found: " . $rest->last_request['url']);
       } catch (Rest_ClientError $e) {
-        throw new Mijireh_ClientError($e->getMessage());
+        throw new ClientError($e->getMessage());
       } catch (Rest_ServerError $e) {
-        throw new Mijireh_ServerError($e->getMessage());
+        throw new ServerError($e->getMessage());
       }
     }
 
     public static function preview_checkout_link()
     {
       if (empty(Mijireh::$access_key)) {
-        throw new Mijireh_Exception('Access key required to view checkout preview');
+        throw new Exception('Access key required to view checkout preview');
       }
 
       return self::$base_url . 'checkout/' . self::$access_key;
